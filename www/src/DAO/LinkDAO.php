@@ -3,7 +3,7 @@
 namespace Watson\DAO;
 
 use Watson\Domain\Link;
-use Symfony\Component\HttpFoundation\Response;
+use XMLWriter;
 
 
 
@@ -48,6 +48,7 @@ class LinkDAO extends DAO
         }
         return $_links;
     }
+
 
     /**
      * Returns a link matching the supplied id.
@@ -169,18 +170,39 @@ class LinkDAO extends DAO
         $this->getDb()->delete('tl_liens', array('user_id' => $userId));
     }
 
+    public function findFifteen() {
+        $sql = "
+            SELECT * 
+            FROM tl_liens 
+            ORDER BY lien_id DESC
+            LIMIT 2
+        ";
+        $result = $this->getDb()->fetchAll($sql);
+
+        // Convert query result to an array of domain objects
+        $_links = array();
+        foreach ($result as $row) {
+            $linkId          = $row['lien_id'];
+            $_links[$linkId] = $this->buildDomainObject($row);
+        }
+        return $_links;
+    }
+
 public function findAllXml(): string {
 
-        $links = $this->findAll(); // Link[]
+        $links = $this->findFifteen(); // Link[]
         
         $xml = new XMLWriter();
 
         $xml->openMemory();
         // mesLinks balise
-        $xml->startElement('mesLinks');
+        $xml->startElement('rss');
+        $xml->writeAttribute('version', '2.0');
+
         foreach ($links as $link){
             $xml->startElement('link');
             // first link balise
+            
             $xml->writeAttribute('id', $link->getId());
             $xml->writeElement('title', $link->getTitle());
             $xml->writeElement('url', $link->getUrl());
