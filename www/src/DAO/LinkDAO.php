@@ -195,27 +195,28 @@ public function findAllXml(): string {
         $xml = new XMLWriter();
 
         $xml->openMemory();
-        // mesLinks balise
+
+        // debut du fichier RSS
         $xml->startElement('rss');
         $xml->writeAttribute('version', '2.0');
         $xml->startElement('channel');
+        // Presentation du site
         $xml->writeElement('title', 'Site du groupe 5');
         $xml->writeElement('link', '127.0.0.1:8081');
         $xml->writeElement('description', 'Description du site du groupe 5');
 
         foreach ($links as $link){
+            //Nouvel ITEM
             $xml->startElement('item');
-            // first link balise
-            
-            
             $xml->writeElement('title', $link->getTitle());
             $xml->writeElement('link', $link->getUrl());
             $xml->writeElement('description', $link->getDesc());
-            // close link
+            // close ITEM
             $xml->endElement();
         }
-        // end mesLinks
+        // close Channel
         $xml->endElement();
+        // close rss
         $xml->endElement();
         return $xml->outputMemory();
     }
