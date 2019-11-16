@@ -198,25 +198,21 @@ public function findAllXml(): string {
         // mesLinks balise
         $xml->startElement('rss');
         $xml->writeAttribute('version', '2.0');
-        $xml->startElement('channel');
-        $xml->writeElement('title', 'Site du groupe 5');
-        $xml->writeElement('link', '127.0.0.1:8081');
-        $xml->writeElement('description', 'Description du site du groupe 5');
 
         foreach ($links as $link){
-            $xml->startElement('item');
+            $xml->startElement('link');
             // first link balise
             
-            
+            $xml->writeAttribute('id', $link->getId());
             $xml->writeElement('title', $link->getTitle());
-            $xml->writeElement('link', $link->getUrl());
+            $xml->writeElement('url', $link->getUrl());
             $xml->writeElement('description', $link->getDesc());
             // close link
             $xml->endElement();
         }
         // end mesLinks
         $xml->endElement();
-        $xml->endElement();
+
         return $xml->outputMemory();
     }
 
