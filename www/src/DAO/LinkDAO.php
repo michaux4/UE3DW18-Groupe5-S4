@@ -175,7 +175,7 @@ class LinkDAO extends DAO
             SELECT * 
             FROM tl_liens 
             ORDER BY lien_id DESC
-            LIMIT 2
+            LIMIT 15
         ";
         $result = $this->getDb()->fetchAll($sql);
 
