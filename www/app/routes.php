@@ -3,6 +3,9 @@
 // Home page
 $app->get('/', "Watson\Controller\HomeController::indexAction")->bind('home');
 
+// route de pagination
+$app->get('/page/{pageIndex}', "Watson\Controller\HomeController::getPage")->bind('page');
+
 // Detailed info about a link
 $app->match('/link/{id}', "Watson\Controller\HomeController::linkAction")->bind('link');
 
@@ -48,4 +51,7 @@ $app->delete('/api/link/{id}', "Watson\Controller\ApiController::deleteLinkActio
 // API : get all links in format xml
 $app->get('/xml/links', "Watson\Controller\ApiXmlController::getLinksAction")
 ->bind('api_links');
+
+
+
 

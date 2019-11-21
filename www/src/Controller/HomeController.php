@@ -13,8 +13,39 @@ class HomeController {
      * @param Application $app Silex application
      */
     public function indexAction(Application $app) {
-        $links = $app['dao.link']->findAll();
-        return $app['twig']->render('index.html.twig', array('links' => $links));
+        // $links = $app['dao.link']->findAll();
+        // return $app['twig']->render('index.html.twig', array('links' => $links));
+        return $app->redirect('page/0');
+    }
+
+    public function getPage(int $pageIndex, Application $app) {
+        // par 15 links
+        $pageSize = 2;
+        // count total de links
+        $count = $app['dao.link']->count();
+        // nb page avec AGRANDISSEMENT
+        $nbPages = ceil($count / $pageSize);
+
+        // cas si la page index va depasser les bords
+        if ($pageIndex < 0) {
+            $pageIndex = $nbPages - 1;
+        }
+        
+        if ($pageIndex >= $nbPages){
+            $pageIndex = 0;
+        }
+        // startIndex         
+        $startIndex = $pageIndex * $pageSize;
+
+        // requette sql
+        $links = $app['dao.link']->pagination($startIndex, $pageSize);
+        
+        return $app['twig']->render('index.html.twig', array(
+            'links' => $links, 
+            // 'count' => $count,
+            'pageIndex' => $pageIndex,
+            'nbPages' => $nbPages,
+        ));
     }
 
     /**

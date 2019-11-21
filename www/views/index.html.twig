@@ -1,22 +1,49 @@
 {% extends "layout.html.twig" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home
+{% endblock %}
 
 {% block content %}
 	<div class="row">
 		{% for link in links %}
-			<div class="col-md-4">
-			    <h2><a class="linkTitle" href="{{ path('link', { 'id': link.id }) }}">{{ link.title }}</a></h2>
-			    <p>{{ link.desc }}</p>
-			    <a href="{{ link.url }}" title="" target="_blank">Open ></a>
-			    <em>(by {{ link.user.username }})</em>
+			<div class="col-md-3" style="box-shadow: 1px 1px 5px #ccc; border-radius: 4px;margin: 10px; padding: 10px;">
+				<h2>
+					<a class="linkTitle" href="{{ path('link', { 'id': link.id }) }}">{{ link.title }}-{{ link.id }}</a>
+				</h2>
+				<p>{{ link.desc }}</p>
+				<a href="/xml/links" title="" target="_blank"><img src="/images/rss.png" width="22" height="22"></a>
+				<a href="{{ link.url }}" title="" target="_blank">Open ></a>
+				<em>(by
+					{{ link.user.username }})</em>
 
-			    {% for tag in link.tags %}
-			    	<a href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
-			    		{{ tag.title }}
-			    	</a>
-			    {% endfor %}
+				{% for tag in link.tags %}
+					<a href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
+						{{ tag.title }}
+					</a>
+				{% endfor %}
 			</div>
 		{% endfor %}
+	</div>
+	<div style="display: flex; align-items: center; justify-content: center;margin-top: 80px;">
+		<nav aria-label="Page navigation">
+			<ul class="pagination pagination-lg">
+				<li>
+					<a href="{{ path('page', { 'pageIndex': pageIndex-1 }) }}" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				
+				{% for i in 1..nbPages %}
+				<li {% if i == pageIndex+1 %}class="active"{% endif %}>
+					<a href="{{ path('page', { 'pageIndex': i-1 }) }}">{{i}}</a>
+				</li>
+				{% endfor %}
+				<li>
+					<a href="{{ path('page', { 'pageIndex': pageIndex+1 }) }}" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
 	</div>
 {% endblock %}

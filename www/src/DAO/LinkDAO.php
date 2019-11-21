@@ -49,6 +49,33 @@ class LinkDAO extends DAO
         return $_links;
     }
 
+    public function pagination(int $startIndex, int $pageSize) {
+        $sql = "
+            SELECT * 
+            FROM tl_liens 
+            ORDER BY lien_id DESC
+            LIMIT $pageSize
+            OFFSET $startIndex
+        ";
+        $result = $this->getDb()->fetchAll($sql);
+
+        // Convert query result to an array of domain objects
+        $_links = array();
+        foreach ($result as $row) {
+            $linkId          = $row['lien_id'];
+            $_links[$linkId] = $this->buildDomainObject($row);
+        }
+        return $_links;
+    }
+
+    public function count(): int {
+        $result = $this->getDb()->fetchAll("SELECT COUNT(*) AS count FROM tl_liens");
+
+        $count = (int)$result[0]["count"];
+
+        return $count;
+    }
+
 
     /**
      * Returns a link matching the supplied id.
